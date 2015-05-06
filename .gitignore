@@ -1,0 +1,11 @@
+ssl/
+config/development.coffee
+config/production.coffee
+config/runtime.json
+plugins/index.js
+app/dashboard/public/vendor
+node_modules
+npm-debug.log
+*.swp
+.idea
+.env
