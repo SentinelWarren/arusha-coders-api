@@ -9,8 +9,6 @@ config =
   jwt:
     secret: process.env.TOKEN_SECRET || "secret",
     issuer: process.env.TOKEN_ISSUER || "nerevu.com",
-    field: 'auth_token',
-    scheme: 'JWT'
     duration: utils.durations.months * 3
 
   mongo:

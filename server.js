@@ -41,7 +41,7 @@ if (utils.env == 'development' && config.verbose) {
 
 timeoutHandler = function(err, req, res, next) {
   options = {err: err, status: 504, source: 'app'}
-  utils.sendResponse(options.res, null, options);
+  utils.sendResponse(res, null, options);
 };
 
 haltOnTimedout = function(req, res, next) {if (!req.timedout) {next()}};

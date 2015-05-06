@@ -44,7 +44,18 @@ UserSchema.methods.verifyPassword = function(password, callback) {
 };
 
 UserSchema.methods.issueToken = function(timestamp, cid) {
-  var payload = {sub: this.email, exp: timestamp, aud: cid, iat: Date.now()}
+
+  console.log('issueToken');
+  var payload = {
+    sub: this.email,
+    exp: timestamp,
+    aud: cid,
+    iss: config.jwt.issuer,
+    iat: Date.now()
+  }
+
+  console.log('payload', payload);
+
   return jwt.sign(payload, config.jwt.secret);
 };
 
