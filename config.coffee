@@ -1,8 +1,8 @@
 utils = require './utils'
 
 config =
-  site: title: 'dff'
-  brand: 'API_AUTH'
+  site: title: 'arusha-coders-api'
+  brand: 'Arusha Coders Authentication API'
   timeout: utils.durations.seconds * 5
   verbose: process.env.DEBUG or false
 

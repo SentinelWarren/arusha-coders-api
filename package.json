@@ -1,6 +1,6 @@
 {
   "name": "api-auth",
-  "description": "Arusha Coders API authentication example app",
+  "description": "Arusha Coders example authentication API",
   "version": "1.0.0",
   "author": "Reuben Cummings",
   "dependencies": {
@@ -38,7 +38,7 @@
     "passport",
     "authentication"
   ],
-  "repository": "https://github.com/nerevu/api-auth",
+  "repository": "https://github.com/reubano/arusha-coders-api",
   "license": "MIT",
   "engines": {
     "node": "0.10.x",

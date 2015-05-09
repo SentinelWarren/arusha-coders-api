@@ -9,7 +9,7 @@ var middleware = require('./middleware')
 
 var exports = module.exports = function(router) {
   router.route('/').get(function(req, res) {
-    return res.send("Welcome to the " + config.brand + " API!");
+    return res.send("Welcome to the " + config.brand + "!");
   });
 
   router.route('/user')
