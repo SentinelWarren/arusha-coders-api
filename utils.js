@@ -108,6 +108,5 @@ exports = module.exports = {
     if (response) {json.objects = response}
     res.status(status)
     res.json(json)
-    // if (message) {debug(message)}
   }
 };

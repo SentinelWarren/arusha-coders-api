@@ -1,7 +1,6 @@
 require('coffee-script/register')
 
 var host, options, timeoutHandler, server, winstonStream
-  // , _ = require('underscore')
   , express = require('express')
   , router = express.Router()
   , morgan = require('morgan')
