@@ -1,4 +1,4 @@
-var promise, options, message, process, errback, callback
+var promise, options, message, process, querify, errback, callback
   , utils = require('../utils')
 
   errback = function (err, req, res) {

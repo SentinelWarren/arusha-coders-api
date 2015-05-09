@@ -1,23 +1,25 @@
-var config = require('../config')
+require('coffee-script/register')
 
-var exports = module.exports = {
-  createToken: function(req, res) {
-    console.log('Creating new jwt token...');
+var exports, sendUserInfo, createToken
+  , utils = require('../utils')
+  , moment = require('moment')
+  , config = require('../config')
 
-    if (!req.body.cid) {
-      var message = "Please enter a client id 'cid' for this token.";
-        , failOpts = status: '402', source: 'createToken'
-      utils.sendResponse res, null, {message: message}, failOpts
-    } else {
-      var expiration = moment().add(moment.duration(config.jwt.duration))
-        , options = {message: 'Your new api token has been created'};
-        , token = res.user.issueToken(expiration.unix(), req.body.cid);
-
-      var response = {
-        result: {jwt: token, exp: expiration.calendar(), cid: req.body.cid}
-      }
-      utils.sendResponse(res, response, options);
-    });
+exports = module.exports = {
+  userInfo: function(req, res) {
+    user = req.user || 'anon'
+    utils.sendResponse(res, {user: user});
   },
-  deleteToken: function(req, res) {return}
+
+  createToken: function(req, res) {
+    var duration = moment.duration(config.jwt.duration)
+      , expiration = moment().add(duration)
+      , options = {message: 'Your new api token has been created'}
+      , token = req.user.issueToken(expiration.unix(), req.body.cid)
+
+    var response = {
+      result: {jwt: token, exp: expiration.calendar(), cid: req.body.cid}
+    }
+    utils.sendResponse(res, response, options);
+  },
 };

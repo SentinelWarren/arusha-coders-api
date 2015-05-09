@@ -1,4 +1,4 @@
-exports = module.exports = {
+var exports = module.exports = {
   reset: function(req, res) {
     var failOpts = {status: 500, source: 'reset'}
       , id = req.query.key

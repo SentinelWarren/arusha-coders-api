@@ -1,16 +1,14 @@
 utils = require './utils'
 
 config =
-  site: title: 'dff'
-  brand: 'API_AUTH'
+  site: title: 'arusha-coders-api'
+  brand: 'Arusha Coders Authentication API'
   timeout: utils.durations.seconds * 5
   verbose: process.env.DEBUG or false
 
   jwt:
     secret: process.env.TOKEN_SECRET || "secret",
     issuer: process.env.TOKEN_ISSUER || "nerevu.com",
-    field: 'auth_token',
-    scheme: 'JWT'
     duration: utils.durations.months * 3
 
   mongo:

@@ -1,7 +1,7 @@
 var passport = require('passport')
   , BasicStrategy = require('passport-http').BasicStrategy
   , AnonymousStrategy = require('passport-anonymous').Strategy
-  , JWTStrategy = require('passport-jwt').Strategy
+  , JWTStrategy = require('passport-http-jwt-bearer').Strategy
   , User = require('./models/user')
   , utils = require('./utils')
   , config = require('./config')
@@ -21,14 +21,7 @@ passport.use(new BasicStrategy(
   }
 ));
 
-var jwt_options = {
-  secretOrKey: config.jwt.secret,
-  issuer: config.jwt.issuer,
-  tokenBodyField: config.jwt.field,
-  authScheme: config.jwt.scheme
-}
-
-passport.use(new JWTStrategy(jwt_options, function(payload, callback) {
+passport.use(new JWTStrategy(config.jwt.secret, function(payload, callback) {
   User.findOne({email: payload.sub}, callback);
 }));
 
@@ -37,8 +30,12 @@ passport.use(new AnonymousStrategy());
 var options = {session: false};
 
 var exports = module.exports = {
-  isAuthenticated: passport.authenticate(['basic', 'jwt'], options),
-  maybeAuthenticated: passport.authenticate(['basic', 'jwt', 'anonymous'], options),
+  basicAuthenticated: passport.authenticate('basic', options),
+  jwtAuthenticated: passport.authenticate('jwt-bearer', options),
+  isAuthenticated: passport.authenticate(['basic', 'jwt-bearer'], options),
+  maybeAuthenticated: passport.authenticate(
+    ['basic', 'jwt-bearer', 'anonymous'], options
+  ),
 
   create: function(req, res, next) {
     req.body.owner = req.user._id
