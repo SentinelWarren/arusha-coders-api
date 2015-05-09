@@ -10,7 +10,7 @@ This is a simple API that lets you create a user account and test view user info
 
 ### Demo Server
 
-#### curl
+#### cURL
 
 create a user
 
@@ -25,12 +25,12 @@ curl -d "name='First Last'" \
 # response
 {
     "source": "signup",
-    "objects": { 
+    "objects": {
         "email": "user@email.com",
         "jwt": "eyJ0eXAi...",
         "exp": "DD/MM/YYYY"
     }
-}      
+}
 ```
 
 get user info via Basic Authentication
@@ -39,7 +39,6 @@ get user info via Basic Authentication
 # request
 curl -H 'Content-Type: application/json' \
     -u 'user@email.com:password' \
-    http://127.0.0.1:3333/user
     http://arusha-coders-api.herokuapp.com/user
 
 # response
@@ -64,7 +63,7 @@ get user info via JWT Bearer Token Authentication
 # request
 curl -H 'Content-Type: application/json' \
     -H 'Authorization: Bearer replace_with_your_jwt' \
-    http://127.0.0.1:3333/user
+    http://arusha-coders-api.herokuapp.com/user
 
 # response
 {
@@ -89,7 +88,6 @@ create another JWT
 curl -X POST \
     -H 'Content-Type: application/json' \
     -u 'user@email.com:password' \
-    http://127.0.0.1:3333/token
     http://arusha-coders-api.herokuapp.com/token
 
 # response
@@ -98,35 +96,65 @@ curl -X POST \
 
 #### Python
 
+initialize
+
 ```python
 # init requirements
 import requests
 
 # set api endpoint
 base = 'http://arusha-coders-api.herokuapp.com'
+```
 
-# create a user
+create a user
+
+```python
+# request
 name, username, password = 'First Last', 'user@email.com', 'password'
 data = {'name': name, 'email': username, 'password': password, 'confirmPassword': password}
 r = requests.post(base + '/user', data=data)
-r.json()
 
+# response
+r.json()
+# same as cURL above
+```
+
+get user info via Basic Authentication
+
+```python
 # extract JWT
 jwt = r.json()['objects']['jwt']
-headers = {'Authorization': 'Bearer %s' % jwt}
 
-# get user info via Basic Authentication
+# request
+headers = {'Authorization': 'Bearer %s' % jwt}
 auth = (username, password)
 r = requests.get(base + '/user', auth=auth)
-r.json()
 
-# get user info via JWT Bearer Token Authentication
+# response
+r.json()
+# same as cURL above
+```
+
+get user info via JWT Bearer Token Authentication
+
+```python
+# request
 r = requests.get(base + '/user', headers=headers)
-r.json()
 
-# create another JWT
-r = requests.post(base + '/token', auth=auth)
+# response
 r.json()
+# same as cURL above
+```
+
+create another JWT
+
+```python
+# request
+r = requests.post(base + '/token', auth=auth)
+
+# response
+r.json()
+# same as cURL above
 ```
 
 ### Local Server
@@ -134,6 +162,47 @@ r.json()
     git clone https://github.com/reubano/arusha-coders-api.git
     npm install
     npm start
+
+#### cURL
+
+create a user
+
+```bash
+# request
+curl -d "name='First Last'" \
+     -d "email=user@email.com" \
+     -d "password=password" \
+     -d "confirmPassword=password" \
+     http://127.0.0.1:3333/user
+```
+
+get user info via Basic Authentication
+
+```bash
+# request
+curl -H 'Content-Type: application/json' \
+    -u 'user@email.com:password' \
+    http://127.0.0.1:3333/user
+```
+
+get user info via JWT Bearer Token Authentication
+
+```bash
+# request
+curl -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer replace_with_your_jwt' \
+    http://127.0.0.1:3333/user
+```
+
+create another JWT
+
+```bash
+# request
+curl -X POST \
+    -H 'Content-Type: application/json' \
+    -u 'user@email.com:password' \
+    http://127.0.0.1:3333/token
+```
 
 #### Python
 
