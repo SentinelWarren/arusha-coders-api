@@ -43,18 +43,14 @@ UserSchema.methods.verifyPassword = function(password, callback) {
   bcrypt.compare(password, this.password, callback);
 };
 
-UserSchema.methods.issueToken = function(timestamp, cid) {
-
-  console.log('issueToken');
+UserSchema.methods.issueToken = function(expiration, cid) {
   var payload = {
     sub: this.email,
-    exp: timestamp,
+    exp: expiration,
     aud: cid,
     iss: config.jwt.issuer,
     iat: Date.now()
   }
-
-  console.log('payload', payload);
 
   return jwt.sign(payload, config.jwt.secret);
 };
