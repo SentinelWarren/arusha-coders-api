@@ -11,6 +11,7 @@ var UserSchema = new Schema({
   lastName: {type: String, required: true},
   email: {type: String, unique: true, required: true},
   password: {type: String, required: true},
+  tasks: [{type: Schema.ObjectId, ref: 'Task'}],
   resetPasswordKey: String,
   role: String,
   accountVerificationKey: String,
