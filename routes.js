@@ -16,6 +16,9 @@ var exports = module.exports = function(router) {
     .get(middleware.isAuthenticated, account.userInfo)
     .post(account.signup)
 
+  router.route('/users')
+    .get(middleware.isAuthenticated, account.users)
+
   router.route('/token')
     .get(middleware.isAuthenticated, token.userInfo)
     .post(middleware.isAuthenticated, token.createToken)

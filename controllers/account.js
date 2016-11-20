@@ -14,6 +14,33 @@ exports = module.exports = {
     utils.sendResponse(res, {user: user});
   },
 
+  users: function(req, res) {
+    var failOpts = {source: 'users'}
+    console.log("Obtaining users list");
+
+    User.find({}).exec(function(err, users) {
+      if (err) {
+        failOpts.status = 500
+        var message = err.message
+      } else {
+        var message = "Successfully obtained users!"
+      };
+
+      console.log(message);
+
+      var sanitize = function(user) {
+        return _.pick(user, ['firstName', 'lastName', 'email', 'role']);
+      };
+
+      var sanitized = users.map(function(user) {
+        return sanitize(user);
+      });
+
+      var options = _.extend({message: message, err: err}, failOpts)
+      return utils.sendResponse(res, sanitized, options);
+    });
+  },
+
   signup: function(req, res) {
     var checkEmail, createUser, validateForm
       , newUser = null
