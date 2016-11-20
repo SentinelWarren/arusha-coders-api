@@ -29,7 +29,7 @@ exports = module.exports = {
       console.log(message);
 
       var sanitize = function(user) {
-        return _.pick(user, ['firstName', 'lastName', 'email', 'role']);
+        return _.pick(user, ['firstName', 'lastName', 'email', 'role', '_id']);
       };
 
       var sanitized = users.map(function(user) {
@@ -78,7 +78,9 @@ exports = module.exports = {
       query.exec(function(err, user) {
         if (user) {
           failOpts.status = 409
-          err = {message: "The account " + id + " is already registered."}
+          message = "The account " + id + " is already registered."
+          console.log(message);
+          err = {message: message}
         };
 
         next(err);
