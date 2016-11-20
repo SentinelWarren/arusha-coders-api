@@ -71,7 +71,11 @@ exports = module.exports = {
             , expiration = moment().add(duration)
             , token = newUser.issueToken(expiration.unix())
 
-          result = {email: newUser.email, jwt: token, exp: expiration.calendar()}
+          result = {
+            role: newUser.role,
+            email: newUser.email,
+            jwt: token,
+            exp: expiration.calendar()}
         };
 
         next(err, result);
@@ -88,7 +92,8 @@ exports = module.exports = {
       var message
 
       if (results.create) {
-        message = "Successfully created user " + newUser.email + "!"
+        message = "Successfully created user " + newUser.email + "with role "
+        message += + newUser.role + "!"
       } else {
         message = "Could not create new user.";
         failOpts.status = failOpts.status || 500

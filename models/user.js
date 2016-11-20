@@ -12,6 +12,7 @@ var UserSchema = new Schema({
   email: {type: String, unique: true, required: true},
   password: {type: String, required: true},
   resetPasswordKey: String,
+  role: String,
   accountVerificationKey: String,
   isVerified: {type: Boolean, default: false},
 });
