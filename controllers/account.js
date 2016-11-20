@@ -33,7 +33,8 @@ exports = module.exports = {
         ])
       ) {
         err = {message: "You must fill out the entire form."};
-      } else if (form.password === !form.confirmPassword) {
+        failOpts.status = 400
+      } else if (form.password !== form.confirmPassword) {
         err = {message: "Please make sure both passwords match."};
         failOpts.status = 400
       };
