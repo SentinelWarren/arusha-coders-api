@@ -50,14 +50,39 @@ var exports = module.exports = {
     process(promise, req, res);
   },
 
-
   create: function(req, res) {
+    req.body.owner = req.user._id
     promise = req.Model.create(req.body);
     process(promise, req, res, 201);
   },
 
+  createByEmail: function(req, res) {
+    var query = User.findOne({email: req.params.id});
+    console.log("Searching for user " + req.params.id);
+
+    query.exec(function(err, user) {
+      if (!user) {
+        message = "The user " + req.params.id + " does not exist."
+        console.log(message);
+        var err = {message: message}
+        options = {message: message, err: err, status: 404, source: req.url}
+        return utils.sendResponse(res, null, options);
+      } else {
+        req.body.owner = user._id
+        promise = req.Model.create(req.body);
+        process(promise, req, res, 201);
+      }
+    });
+  },
+
   update: function(req, res) {
     query = req.ownedQuery.findOneAndUpdate({_id: req.params.id}, req.body)
+    promise = query.lean().exec()
+    process(promise, req, res);
+  },
+
+  updateByEmail: function(req, res) {
+    query = req.ownedQuery.findOneAndUpdate({email: req.params.id}, req.body)
     promise = query.lean().exec()
     process(promise, req, res);
   },
@@ -67,8 +92,8 @@ var exports = module.exports = {
     process(promise, req, res);
   },
 
-  getByName: function(req, res) {
-    promise = req.ownedQuery.findOne({name: req.params.id}).lean().exec()
+  getByEmail: function(req, res) {
+    promise = req.ownedQuery.findOne({email: req.params.id}).lean().exec()
     process(promise, req, res);
   },
 
@@ -78,8 +103,8 @@ var exports = module.exports = {
     process(promise, req, res);
   },
 
-  removeByName: function(req, res) {
-    query = req.ownedQuery.findOneAndRemove({name: req.params.id})
+  removeByEmail: function(req, res) {
+    query = req.ownedQuery.findOneAndRemove({email: req.params.id})
     promise = query.lean().exec()
     process(promise, req, res);
   },

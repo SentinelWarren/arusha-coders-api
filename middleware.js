@@ -40,9 +40,63 @@ var exports = module.exports = {
     ['basic', 'jwt-bearer', 'anonymous'], options
   ),
 
-  create: function(req, res, next) {
-    req.body.owner = req.user._id
+  filterByOwner: function(req, res, next) {
+    var model = req.url.split('/')[1]
+      , Model = require('./models/' + model)
+     , options = {owner: req.user._id}
+    req.ownedQuery = Model.find(options)
     next();
+  },
+
+  filterByRole: function(req, res, next) {
+    var role = req.user.role || 'user'
+      , model = req.url.split('/')[1]
+      , Model = require('./models/' + model)
+
+    if (role === 'admin') {
+      var options = {}
+    } else {
+      var options = {owner: req.user._id}
+    }
+
+    req.ownedQuery = Model.find(options)
+    next();
+  },
+
+  requireAdmin: function(req, res, next) {
+    var role = req.user.role || 'user'
+
+    if (role !== 'admin') {
+      var message = 'You must be an admin in order to perform this action.';
+
+      return utils.sendResponse(res, null, {
+        source: 'isAdmin',
+        status: 401,
+        message: message,
+        err: {message: message}
+      });
+    } else {
+      next();
+    }
+  },
+
+  requireManager: function(req, res, next) {
+    var role = req.user.role || 'user'
+      , isManager = (ref = role) === 'admin' || ref === 'manager';
+
+    if (!isManager) {
+      var message = 'You must be either an admin or manager in order to ';
+      message += 'perform this action.';
+
+      return utils.sendResponse(res, null, {
+        source: 'isManager',
+        status: 401,
+        message: message,
+        err: {message: message}
+      });
+    } else {
+      next();
+    }
   },
 
   configCORS: function(req, res, next) {
@@ -51,7 +105,7 @@ var exports = module.exports = {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,PATCH,DELETE');
     res.setHeader('Access-Control-Allow-Headers', headers);
-    if ('OPTIONS' === req.method) {return res.send(200)}
+    if ('OPTIONS' === req.method) {return res.sendStatus(200)}
     next();
   }
 };
