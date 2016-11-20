@@ -7,7 +7,6 @@ var exports, sendUserInfo
   , moment = require('moment')
   , User = require('../models/user')
   , config = require('../config')
-  , errorStatus = 500
 
 exports = module.exports = {
   userInfo: function(req, res) {
@@ -20,7 +19,7 @@ exports = module.exports = {
       , newUser = null
       , verificationErr = null
       , form = req.body
-      , failOpts = {status: errorStatus, source: 'signup'}
+      , failOpts = {source: 'signup'}
 
     validateForm = function(next, form) {
       var err = null
@@ -36,6 +35,7 @@ exports = module.exports = {
         err = {message: "You must fill out the entire form."};
       } else if (form.password === !form.confirmPassword) {
         err = {message: "Please make sure both passwords match."};
+        failOpts.status = 400
       };
 
       next(err);
@@ -90,6 +90,7 @@ exports = module.exports = {
         message = "Successfully created user " + newUser.email + "!"
       } else {
         message = "Could not create new user.";
+        failOpts.status = failOpts.status || 500
       };
 
       options = _.extend({message: message, err: err}, failOpts)
