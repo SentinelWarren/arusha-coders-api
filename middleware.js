@@ -28,6 +28,9 @@ passport.use(new JWTStrategy(config.jwt.secret, function(payload, callback) {
 passport.use(new AnonymousStrategy());
 
 var options = {session: false};
+var headers = 'Access-Control-Allow-Origin, Access-Control-Allow-Headers,';
+headers += 'Origin, Accept, X-Requested-With, Content-Type, Authorization,';
+headers += 'Access-Control-Request-Method, Access-Control-Request-Headers';
 
 var exports = module.exports = {
   basicAuthenticated: passport.authenticate('basic', options),
@@ -45,8 +48,9 @@ var exports = module.exports = {
   configCORS: function(req, res, next) {
     if (!req.get('Origin')) {return next()}
     res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,PATCH,DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', headers);
     if ('OPTIONS' === req.method) {return res.send(200)}
     next();
   }
