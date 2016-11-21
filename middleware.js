@@ -40,34 +40,37 @@ var exports = module.exports = {
     ['basic', 'jwt-bearer', 'anonymous'], options
   ),
 
-  filterByOwner: function(req, res, next) {
+  hydrate: function(req, res, next) {
     var model = req.url.split('/')[1]
-      , Model = require('./models/' + model)
-     , options = {owner: req.user._id}
-    req.ownedQuery = Model.find(options)
+    req.Model = require('./models/' + model)
+    next();
+  },
+
+  filterByOwner: function(req, res, next) {
+    req.ownedQuery = req.Model.find({owner: req.user._id})
     next();
   },
 
   filterByRole: function(req, res, next) {
-    var role = req.user.role || 'user'
-      , model = req.url.split('/')[1]
-      , Model = require('./models/' + model)
+    var role = req.user.role || config.defaultRole
 
     if (role === 'admin') {
-      var options = {}
+      req.ownedQuery = req.Model
+    } else if (role === 'manager') {
+      req.ownedQuery = req.Model.where('role').nin(['admin', 'manager'])
     } else {
-      var options = {owner: req.user._id}
-    }
+      req.ownedQuery = req.Model.find({owner: req.user._id})
+    };
 
-    req.ownedQuery = Model.find(options)
     next();
   },
 
   requireAdmin: function(req, res, next) {
-    var role = req.user.role || 'user'
+    var role = req.user.role || config.defaultRole
 
     if (role !== 'admin') {
-      var message = 'You must be an admin in order to perform this action.';
+      var message = 'Your current role is: ' + role + '.';
+      message += 'You must be an admin in order to perform this action.';
 
       return utils.sendResponse(res, null, {
         source: 'isAdmin',
@@ -81,11 +84,12 @@ var exports = module.exports = {
   },
 
   requireManager: function(req, res, next) {
-    var role = req.user.role || 'user'
+    var role = req.user.role || config.defaultRole
       , isManager = (ref = role) === 'admin' || ref === 'manager';
 
     if (!isManager) {
-      var message = 'You must be either an admin or manager in order to ';
+      var message = 'Your current role is: ' + role + '.';
+      message += 'You must be either an admin or manager in order to ';
       message += 'perform this action.';
 
       return utils.sendResponse(res, null, {

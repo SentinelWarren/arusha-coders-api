@@ -50,15 +50,16 @@ exports = module.exports = {
 
     validateForm = function(next, form) {
       var err = null
+        , fields = [
+            form.role,
+            form.firstName,
+            form.lastName,
+            form.email,
+            form.password,
+            form.confirmPassword,
+          ]
 
-      if (
-        !_.every([
-          form.name,
-          form.email,
-          form.password,
-          form.confirmPassword,
-        ])
-      ) {
+      if (!_.every(fields)) {
         err = {message: "You must fill out the entire form."};
         failOpts.status = 400
       } else if (form.password !== form.confirmPassword) {
@@ -103,6 +104,7 @@ exports = module.exports = {
           result = {
             role: newUser.role,
             email: newUser.email,
+            _id: newUser._id,
             jwt: token,
             exp: expiration.calendar()}
         };

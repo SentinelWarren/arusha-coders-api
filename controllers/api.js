@@ -44,8 +44,9 @@ querify = function(query, options) {
 var exports = module.exports = {
   list: function(req, res) {
     req.multiple = true
+    var opts = {path: 'owner', select: 'email'}
     options = utils.parseRequest(req)
-    query = req.ownedQuery.find(options.query)
+    query = req.ownedQuery.find(options.query).populate(opts)
     promise = querify(query, options).lean().exec()
     process(promise, req, res);
   },

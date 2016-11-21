@@ -126,7 +126,6 @@ get user info via Basic Authentication
 jwt = r.json()['objects']['jwt']
 
 # request
-headers = {'Authorization': 'Bearer %s' % jwt}
 auth = (username, password)
 r = requests.get(base + '/user', auth=auth)
 
@@ -139,6 +138,7 @@ get user info via JWT Bearer Token Authentication
 
 ```python
 # request
+headers = {'Authorization': 'Bearer %s' % jwt}
 r = requests.get(base + '/user', headers=headers)
 
 # response

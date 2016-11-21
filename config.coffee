@@ -8,7 +8,8 @@ config =
 
   jwt:
     secret: process.env.TOKEN_SECRET || "secret",
-    issuer: process.env.TOKEN_ISSUER || "nerevu.com",
+    issuer: process.env.TOKEN_ISSUER || "accounts.nerevu.com",
+    audience: process.env.TOKEN_AUDIENCE || "nerevu.com",
     duration: utils.durations.months * 3
 
   mongo:
@@ -19,5 +20,7 @@ config =
 
     # alternative to setting server, database, user and password separately
     connectionString: process.env.MONGOLAB_URI
+
+  defaultRole: 'user'
 
 module.exports = config
